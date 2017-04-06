@@ -1,8 +1,9 @@
-import cv2
+import cv2    #python ima probel sa bibliotekama, na mom kompjuter prijavljuje gresku
 import numpy
 
 
 nodes=""
+centering_list=""
 class my_node:
     x_axis=""
     y_axis=""
@@ -18,11 +19,19 @@ class my_node:
         self.y_axis=y_axis
         self.bend=bend   #odredjuje da li je node pocetak,kraj ili samo obican node
 
+class centering_points:
+    posx=""
+    posy=""
+    def __init__(self,posx,posy):
+        self.posx=posx
+        self.posy=posy
+
 
 
 matrica=numpy.zeros(shape=(1500,1500))
 node=numpy.zeros(shape=(1500,1500))
-lavirint=numpy.zeros(shape=(1500,1500))
+for_centering=numpy.zeroes(shape=(1500,1500))
+#lavirint=numpy.zeros(shape=(1500,1500))
 img=cv2.imread('slika.jpg')        # http://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_geometric_transformations/py_geometric_transformations.html#geometric-transformations
 
 def imageanal(img):
@@ -39,7 +48,21 @@ def imageanal(img):
                 node[x,y]=3          #3 za end
     return(matrica)
 
-def define_node():
+def image_imagecenter():                 #centriranje slike pomocu crvenih tacaka na slici
+    for x in range(0,1500):
+        for y in range(0,1500):
+            px=img[x,y]
+            if px[1]>200 and px[2]<50 and px[3]<50:
+                temp=centering_points(x,y)
+                centering_list.append(temp)
+    pts1 = np.float32([[centering_list[1].posx, centering_list[1].posy], [centering_list[2].posx, centering_list[2].posy], [centering_list[3].posx, centering_list[3].posy], [centering_list[4].posx, centering_list[4].posy]])
+    pts2 = np.float32([[0, 0], [1500, 0], [0, 1500], [1500, 1500]])   #kod kopiran sa sajta opencv
+    M = cv2.getPerspectiveTransform(pts1, pts2)                       #problem je verovatno sa numpy bibliotekom
+
+    dst = cv2.warpPerspective(img, M, (300, 300))
+
+
+def define_node():                 #posle analize slike odrediti nodeove
     for x in range(0,1500):
         for y in range(0,1500):
             if matrica[x,y]==0 and matrica[x+1,y]==1:
