@@ -1,9 +1,10 @@
-import cv2    #python ima probel sa bibliotekama, na mom kompjuter prijavljuje gresku
+import cv2    #python ima problem sa bibliotekama, na mom kompjuter prijavljuje gresku
 import numpy
 
 
-nodes=""
-centering_list=""
+nodes=[]
+centering_list=[]
+path=[]
 class my_node:
     x_axis=""
     y_axis=""
@@ -14,10 +15,26 @@ class my_node:
     bend=""
     connection=""       #ovo i prev_connection se koriste kao koneckicije sa odeovima na putu ka kraju
     prev_connection=""
+    visited=False
     def __init__(self,x_axis,y_axis,bend):
         self.x_axis=x_axis
         self.y_axis=y_axis
         self.bend=bend   #odredjuje da li je node pocetak,kraj ili samo obican node
+    def find_path(self):
+
+        self.visited=True
+        path.append(self)
+        if self.bend==2:
+            return path
+        elif !self.right=="" and node[self.rigth,self.y_axis].visited==False:  #unsure whats wrong here
+            find_path(node[self.rigth,self.y_axis])
+        elif !self.down=="" and node[self.x_axis,self.down].visited==False:
+            find_path(node[self.x_axis,self.down])
+        elif !self.left=="" and node[self.left,self.y_axis]==False:
+            find_path(node[self.left,self.y_axis])
+        elif !self.top=="" and node[self.x_axis,self.top].visited==False:
+            find_path(node[self.x_axis,self.top])
+
 
 class centering_points:
     posx=""
@@ -31,7 +48,7 @@ class centering_points:
 matrica=numpy.zeros(shape=(1500,1500))
 node=numpy.zeros(shape=(1500,1500))
 for_centering=numpy.zeroes(shape=(1500,1500))
-#lavirint=numpy.zeros(shape=(1500,1500))
+
 img=cv2.imread('slika.jpg')        # http://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_geometric_transformations/py_geometric_transformations.html#geometric-transformations
 
 def imageanal(img):
@@ -55,9 +72,9 @@ def image_imagecenter():                 #centriranje slike pomocu crvenih tacak
             if px[1]>200 and px[2]<50 and px[3]<50:
                 temp=centering_points(x,y)
                 centering_list.append(temp)
-    pts1 = np.float32([[centering_list[1].posx, centering_list[1].posy], [centering_list[2].posx, centering_list[2].posy], [centering_list[3].posx, centering_list[3].posy], [centering_list[4].posx, centering_list[4].posy]])
-    pts2 = np.float32([[0, 0], [1500, 0], [0, 1500], [1500, 1500]])   #kod kopiran sa sajta opencv
-    M = cv2.getPerspectiveTransform(pts1, pts2)                       #problem je verovatno sa numpy bibliotekom
+    pts1 = numpy.float32([[centering_list[1].posx, centering_list[1].posy], [centering_list[2].posx, centering_list[2].posy], [centering_list[3].posx, centering_list[3].posy], [centering_list[4].posx, centering_list[4].posy]])
+    pts2 = numpy.float32([[0, 0], [1500, 0], [0, 1500], [1500, 1500]])   #kod kopiran sa sajta opencv
+    M = cv2.getPerspectiveTransform(pts1, pts2)
 
     dst = cv2.warpPerspective(img, M, (300, 300))
 
@@ -67,7 +84,6 @@ def define_node():                 #posle analize slike odrediti nodeove
         for y in range(0,1500):
             if matrica[x,y]==0 and matrica[x+1,y]==1:
                 node[x,y]=1
-
             elif matrica[x,y]==0 and matrica[x,y+1]==0:
                 node[x,y]=1
             elif matrica[x,y]==0 and matrica[x-1,y]==1:
@@ -78,7 +94,11 @@ def define_node():                 #posle analize slike odrediti nodeove
 
 def create_node(x,y,b):
  temp_node=my_node(x,y,b)
- nodes.append(temp_node)
+ if not b==1:
+     nodes.append(temp_node)
+ elif b==1:
+     nodes.insert(0,temp_node)
+
 
 def fill_list():
     for i in range(0,1500):
@@ -87,9 +107,10 @@ def fill_list():
                 px=img[i,f]
 
                 if px[1]<40 and px[2]>200 and px[3]>200:
-                    create_node(i,f,1)
+                    create_node(i,f,1)         #pocetak lavirinta
+
                 elif px[1] > 200 and px[2] > 200 and px[3] < 40:
-                    create_node(i,f,2)
+                    create_node(i,f,2)          #kraj lavirinta
                 else:
                     create_node(i,f,0)
 
@@ -117,4 +138,42 @@ def node_connections():             #uzasan nacin popunjavanja varijabli rltd al
 
 
 #procedure za resavanje lavirinta
+
+def kill_branches():
+     for j in range(0,1500):
+         for k in range(0,1500):
+           node[j,k]=0          #indentatio level off, recheck
+     while k>0:                 #not sure if indent is correct need recheck
+         k=0
+     for i in range(len(nodes),0):
+      branchkiller=nodes[i]
+      a = 0
+      if branchkiller.left == "":
+          a += 1
+      if branchkiller.right == "":
+          a += 1
+      if branchkiller.top == "":
+          a += 1
+      if branchkiller.down == "":
+          a += 1
+      if a>1 and branchkiller.bend==0:
+          nodes.remove(i)
+          k+=1
+
+     for i in range(len(nodes), 0):
+        branchkiller = nodes[i]
+        node[branchkiller.posx,branchkiller.posy]=branchkiller
+
+
+
+image_imagecenter()
+imageanal(img)
+define_node()
+fill_list()
+node_connections()
+kill_branches()
+start=nodes[0]
+find_path(start)  #unsure if corect call of the metod
+
+
 
