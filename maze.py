@@ -20,20 +20,6 @@ class my_node:
         self.x_axis=x_axis
         self.y_axis=y_axis
         self.bend=bend   #odredjuje da li je node pocetak,kraj ili samo obican node
-    def find_path(self):
-
-        self.visited=True
-        path.append(self)
-        if self.bend==2:
-            return path
-        elif !self.right=="" and node[self.rigth,self.y_axis].visited==False:  #unsure whats wrong here
-            find_path(node[self.rigth,self.y_axis])
-        elif !self.down=="" and node[self.x_axis,self.down].visited==False:
-            find_path(node[self.x_axis,self.down])
-        elif !self.left=="" and node[self.left,self.y_axis]==False:
-            find_path(node[self.left,self.y_axis])
-        elif !self.top=="" and node[self.x_axis,self.top].visited==False:
-            find_path(node[self.x_axis,self.top])
 
 
 class centering_points:
@@ -90,7 +76,7 @@ def define_node():                 #posle analize slike odrediti nodeove
                 node[x,y]=1
             elif matrica[x,y]==0  and matrica[x,y-1]==0:
                 node[x,y]=1
-    return(node)
+
 
 def create_node(x,y,b):
  temp_node=my_node(x,y,b)
@@ -139,31 +125,49 @@ def node_connections():             #uzasan nacin popunjavanja varijabli rltd al
 
 #procedure za resavanje lavirinta
 
-def kill_branches():
-     for j in range(0,1500):
-         for k in range(0,1500):
-           node[j,k]=0          #indentatio level off, recheck
-     while k>0:                 #not sure if indent is correct need recheck
-         k=0
-     for i in range(len(nodes),0):
-      branchkiller=nodes[i]
-      a = 0
-      if branchkiller.left == "":
-          a += 1
-      if branchkiller.right == "":
-          a += 1
-      if branchkiller.top == "":
-          a += 1
-      if branchkiller.down == "":
-          a += 1
-      if a>1 and branchkiller.bend==0:
-          nodes.remove(i)
-          k+=1
 
-     for i in range(len(nodes), 0):
+
+
+
+def kill_branches():           #used to remove dead ends
+    k=1
+    for j in range(0,1500):
+        for h in range(0,1500):
+            node[j,h]=0
+    while k>0:
+        k=0
+        for i in  range(len(nodes),0):
+            branchkiller = nodes[i]
+            a = 0
+            if branchkiller.left == "":
+                a += 1
+            if branchkiller.right == "":
+                a += 1
+            if branchkiller.top == "":
+                a += 1
+            if branchkiller.down == "":
+                a += 1
+            if a > 1 and branchkiller.bend == 0:
+                nodes.remove(i)
+                k += 1
+    for i in range(len(nodes), 0):
         branchkiller = nodes[i]
-        node[branchkiller.posx,branchkiller.posy]=branchkiller
+        node[branchkiller.posx, branchkiller.posy] = branchkiller
 
+def find_path(x,y):
+    temp_node=node[x,y]
+    temp_node.visited = True
+    path.append(temp_node)
+    if temp_node.bend == 2:
+        return path
+    elif not temp_node.right == "" and node[temp_node.rigth, temp_node.y_axis].visited == False:  # unsure whats wrong here
+        find_path(node[temp_node.rigth, temp_node.y_axis])
+    elif not temp_node.down == "" and node[temp_node.x_axis, temp_node.down].visited == False:
+        find_path(node[temp_node.x_axis, temp_node.down])
+    elif not temp_node.left == "" and node[temp_node.left, temp_node.y_axis] == False:
+        find_path(node[temp_node.left, temp_node.y_axis])
+    elif not temp_node.top == "" and node[temp_node.x_axis, temp_node.top].visited == False:
+        find_path(node[temp_node.x_axis, temp_node.top])
 
 
 image_imagecenter()
@@ -173,7 +177,7 @@ fill_list()
 node_connections()
 kill_branches()
 start=nodes[0]
-find_path(start)  #unsure if corect call of the metod
+find_path(start.x_axis,start.y_axis)
 
 
 
