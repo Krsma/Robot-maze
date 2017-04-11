@@ -33,7 +33,7 @@ class centering_points:
 
 matrica=numpy.zeros(shape=(1500,1500))
 node=numpy.zeros(shape=(1500,1500))
-for_centering=numpy.zeroes(shape=(1500,1500))
+for_centering=numpy.zeros(shape=(1500,1500))
 
 img=cv2.imread('slika.jpg')        # http://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_geometric_transformations/py_geometric_transformations.html#geometric-transformations
 
