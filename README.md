@@ -1,4 +1,5 @@
 # Robot-maze
 Work in progress on a robot solving ball mazes.
-Album containg images i used to test linefinder.py and edgefinder.py
-https://goo.gl/photos/zoFT17xp6ULjhKNj7
+
+Image i use for testing can be found here 
+https://drive.google.com/file/d/0B1ShyXgc5T4cLWVhU0Z0WmhjYTQ/view?usp=sharing
