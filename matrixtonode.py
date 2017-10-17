@@ -5,12 +5,13 @@ import numpy
 img = cv2.imread('lavirinttesst.jpg') #init for the image
 net=numpy.zeros(shape=(15,15))
 nodelist = []
+initstack=[]
 
 class node(object):
-    north = 0
-    south = 0
-    west = 0
-    east = 0
+    north = None
+    south = None
+    west = None
+    east = None
     tag = 0   #tag will be used as a marker for which node is finall and where the ball starts
     positionx = 0
     positiony = 0
@@ -20,31 +21,52 @@ class node(object):
 
     def connect(self):              #making connections to other nodes, there probably is a better way to do this
         for i in range(positiony,15):
-            if net[self.positionx,i]==4:
-                self.east=i
+            if net[self.positionx,i]==4:                
+                for j in range(0,len(nodelist)):
+                    if (nodelist[j].positiony==i) and (nodelist[j].positionx==self.positionx):
+                        self.east=nodelist[j]
+                        break
+                    
             elif net[self.positionx,i]==1:
                 break
+            
+            
         for i in range(1,positiony):   #edge is always 1 so we skip that one
             if net[self.positionx,i]==4:
-                self.west=i
+                for j in range(0,len(nodelist)):
+                    if (nodelist[j].positiony==i) and (nodelist[j].positionx==self.positionx):
+                        self.west=nodelist[j]
+                        break
+                    
             elif net[self.positionx,i]==1:
                 break
 
+
         for j in range(positionx,15):
             if net[j,positiony]==4:
-                self.south=j
+                for j in range(0,len(nodelist)):
+                    if (nodelist[j].positionx==i) and (nodelist[j].positiony==self.positiony):
+                        self.south=nodelist[j]
+                        break
+                    
             elif net[j,positiony]==1:
                 break
 
         for j in range(1,positionx):  #evading the edge
             if net[j,positiony]==4:
-                self.north=j
+                for j in range(0,len(nodelist)):
+                    if (nodelist[j].positionx==i) and (nodelist[j].positiony==self.positiony):
+                        self.north=nodelist[j]
+                        break
+                    
             elif net[j,positiony]==1:
                 break
 
 
 
-
+def solvethemaze(nodm):
+    current=nodm[len(nodm)]
+    
 
 
 
@@ -95,5 +117,7 @@ for k in range(0,14):   #should be changed to 0..14 and the 15 line is used as a
                 net[k,f]=4 #tag 4 represents that this field contains the node
                 nodelist.append(x)
 
-for j in range(0,len(nodelist)):  #go through all nodes you found
+for j in range(0,len(nodelist)):  #go through all nodes you found and connect them
         nodelist[j].connect
+        
+        
