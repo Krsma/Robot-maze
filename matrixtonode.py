@@ -2,7 +2,7 @@ import cv2
 import numpy
 
 
-img = cv2.imread('test2green.jpg') #init for the image
+img = cv2.imread('lavirinttesst.jpg') #init for the image
 net=numpy.zeros(shape=(15,15))
 nodelist = []
 
@@ -51,8 +51,8 @@ class node(object):
 def box_value(a,b):  #part of netmaker.py code
    green=0
    sum=0
-   for i in range((img.shape[0]//15)*a,(img.shape[0]//15)*(a+1)):
-       for j in range((img.shape[1]//15)*b,(img.shape[1]//15)*(b+1)):
+   for i in range((150//15)*a,(150//15)*(a+1)):
+       for j in range((150//15)*b,(150//15)*(b+1)):
           px=img[i,j]
           sum=sum+px[0]+px[1]+px[2]
           if (px[1]>200) and (px[0]<100) and (px[2]<100):
@@ -66,8 +66,8 @@ def box_value(a,b):  #part of netmaker.py code
 
 for i in range(0,15):
     for j in range(0,15):
-        x=img.shape[0]//15*i
-        y=img.shape[1]//15*j
+        x=150//15*i
+        y=150//15*j
         if box_value(i,j)==1:
             net[i,j]=2     #tag 2 is for start
         elif box_value(i,j)<30000:
