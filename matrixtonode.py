@@ -6,6 +6,7 @@ img = cv2.imread('lavirinttesst.jpg') #init for the image
 net=numpy.zeros(shape=(15,15))
 nodelist = []
 initstack=[]
+path=[]
 
 class node(object):
     north = None
@@ -15,29 +16,30 @@ class node(object):
     tag = 0   #tag will be used as a marker for which node is finall and where the ball starts
     positionx = 0
     positiony = 0
+    beenhere= False
     def __init__(self,positionx,positiony):
         self.positiony=positiony
         self.positionx=positionx
 
     def connect(self):              #making connections to other nodes, there probably is a better way to do this
         for i in range(positiony,15):
-            if net[self.positionx,i]==4:                
+            if net[self.positionx,i]==4:
                 for j in range(0,len(nodelist)):
                     if (nodelist[j].positiony==i) and (nodelist[j].positionx==self.positionx):
                         self.east=nodelist[j]
                         break
-                    
+
             elif net[self.positionx,i]==1:
                 break
-            
-            
+
+
         for i in range(1,positiony):   #edge is always 1 so we skip that one
             if net[self.positionx,i]==4:
                 for j in range(0,len(nodelist)):
                     if (nodelist[j].positiony==i) and (nodelist[j].positionx==self.positionx):
                         self.west=nodelist[j]
                         break
-                    
+
             elif net[self.positionx,i]==1:
                 break
 
@@ -48,7 +50,7 @@ class node(object):
                     if (nodelist[j].positionx==i) and (nodelist[j].positiony==self.positiony):
                         self.south=nodelist[j]
                         break
-                    
+
             elif net[j,positiony]==1:
                 break
 
@@ -58,15 +60,54 @@ class node(object):
                     if (nodelist[j].positionx==i) and (nodelist[j].positiony==self.positiony):
                         self.north=nodelist[j]
                         break
-                    
+
             elif net[j,positiony]==1:
                 break
 
 
 
 def solvethemaze(nodm):
-    current=nodm[len(nodm)]
-    
+    current=nodm[len(nodm)] #something breaks here
+    if (current.east.tag==5):
+        nodm.append(current.east)
+        return(nomd)
+
+
+    elif(not(current.east.tag==5) and (current.east.beenhere==False)):
+        current.beenhere=True
+        nodm.append(current.east)
+        solvethemaze(nodm)
+
+
+    if (current.west.tag==5):
+        nodm.append(current.west)
+        return(nomd)
+
+
+    elif(not(current.west.tag==5) and (current.west.beenhere==False)):
+        current.beenhere=True
+        nodm.append(current.west)
+        solvethemaze(nodm)
+
+    if (current.north.tag==5):
+        nodm.append(current.north)
+        return(nomd)
+
+
+    elif(not(current.north.tag==5) and (current.north.beenhere==False)):
+        current.beenhere=True
+        nodm.append(current.north)
+        solvethemaze(nodm)
+
+    if (current.south.tag==5):
+        nodm.append(current.south)
+        return(nomd)
+
+
+    elif(not(current.south.tag==5) and not(current.south.beenhere==False)):
+        current.beenhere=True
+        nodm.append(current.south)
+        solvethemaze(nodm)
 
 
 
@@ -119,5 +160,7 @@ for k in range(0,14):   #should be changed to 0..14 and the 15 line is used as a
 
 for j in range(0,len(nodelist)):  #go through all nodes you found and connect them
         nodelist[j].connect
-        
-        
+        if nodelist[j].tag==2:
+            initstack.append(nodelist[j])
+
+path=solvethemaze(initstack)
