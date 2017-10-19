@@ -13,13 +13,14 @@ class node(object):
     south = None
     west = None
     east = None
-    tag = 0   #tag will be used as a marker for which node is finall and where the ball starts
+    tag = 0   #tag 5 is the final of the maze, tag 2 for the start, tag 1 for regular nodes
     positionx = 0
     positiony = 0
     beenhere= False
-    def __init__(self,positionx,positiony):
+    def __init__(self,positionx,positiony,tag):
         self.positiony=positiony
         self.positionx=positionx
+        self.tag=tag
 
     def connect(self):              #making connections to other nodes, there probably is a better way to do this
         for i in range(positiony,15):
@@ -67,7 +68,9 @@ class node(object):
 
 
 def solvethemaze(nodm):
-    current=nodm[len(nodm)] #something breaks here
+                             #crritical erorr here
+    current=nodm[len(nodm)]    # still broken af
+
     if (current.east.tag==5):
         nodm.append(current.east)
         return(nomd)
@@ -113,16 +116,23 @@ def solvethemaze(nodm):
 
 def box_value(a,b):  #part of netmaker.py code
    green=0
+   red=0
    sum=0
    for i in range((150//15)*a,(150//15)*(a+1)):
        for j in range((150//15)*b,(150//15)*(b+1)):
           px=img[i,j]
           sum=sum+px[0]+px[1]+px[2]
-          if (px[1]>200) and (px[0]<100) and (px[2]<100):
+          if (px[1]>px[0]+50) and (px[1]>px[2]+50) and (px[1]>100): #thresholding for colors red and green
               green=green+1
+
+          if (px[0]>px[1]+50) and (px[0]>px[2]+50) and (px[0]>100):
+              red=red+1
+              print("i have red")
 
    if green > 50:   #this value has to be tweaked based on the actuall image #todo
         sum=1
+   if red>30:
+       sum=2
 
    return sum
 
@@ -133,6 +143,10 @@ for i in range(0,15):
         y=150//15*j
         if box_value(i,j)==1:
             net[i,j]=2     #tag 2 is for start
+            print("i have the start")
+        if box_value(i,j)==2:
+            net[i,j]=5      #tag 5 is for end of the maze
+            print("i have the end")
         elif box_value(i,j)<30000:
             net[i,j]=1     #tag 1 is for wall
         else:
@@ -148,19 +162,26 @@ for k in range(0,14):   #should be changed to 0..14 and the 15 line is used as a
             b=(net[k,f-1]==1)
             c=(net[k+1,f]==1)
             d=(net[k-1,f]==1)
-            if ((a and not b) or (b and not a)) or ((c and not d) or (d and not c)):
+            if (((a and not b) or (b and not a)) or ((c and not d) or (d and not c))) or (net[k,f]==5) or (net[k,f]==2):
                 #i slightly changed this algortihm
                 #https://youtu.be/rop0W4QDOUI?t=7m56s
-                x = node(k,f)
-                print(k)
-                print(f)
-                print()
+                if net[k,f]==5:
+                    x=node(k,f,5)
+                elif net[k,f]==2:
+                    x=node(k,f,2)
+                else:
+                    x = node(k,f,1)    #add tag giving into init
+
+                #print(k)
+                #print(f)
+                #print()
                 net[k,f]=4 #tag 4 represents that this field contains the node
                 nodelist.append(x)
 
+
 for j in range(0,len(nodelist)):  #go through all nodes you found and connect them
         nodelist[j].connect
-        if nodelist[j].tag==2:
+        if nodelist[j].tag==2: # for some reason this part never inits
             initstack.append(nodelist[j])
-
+            print("have begining of the list")
 path=solvethemaze(initstack)
