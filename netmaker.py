@@ -3,40 +3,50 @@ import numpy as np
 
 def readImage(imageFileName):
     img = cv2.imread(imageFileName)
-    if(img is None):
+    if img is None :
         print("File " + imageFileName + " not found.")
     return img 
 
-def buildnet(img):
+def buildnet(img, width = 15, height = 15, show = False):
     # tag 2 is for start
     # tag 5 is for end of the maze
     # tag 1 is for wall
     # tag 0 is for path
-    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    img15 = cv2.resize(img, (width, height), interpolation = cv2.INTER_LINEAR)  #
+    hsv = cv2.cvtColor(img15, cv2.COLOR_BGR2HSV)
 
     lowGreen = np.array([40, 100, 100])
     upGreen = np.array([80, 255, 255])
     greenMask = cv2.inRange(hsv, lowGreen, upGreen)
-
+    
     lowRed = np.array([0, 50, 50])
     upRed = np.array([50, 255, 255])
     redMask = cv2.inRange(hsv, lowRed, upRed)
 
-    cv2.imshow('img', img)
-    cv2.imshow('greenMask', greenMask)
-    cv2.imshow('redMask', redMask)
+    if show:
+        cv2.imshow('img', img)
+        cv2.imshow('img15', img15)
+        cv2.imshow('greenMask', greenMask)
+        cv2.imshow('redMask', redMask)
 
-    net = np.zeros(shape=(15, 15))
-    # TODO: add logic here
-    for a in range(0, 15):
-        for b in range(0, 15):
-            net[a, b] = 2
+    # Build net
+    net = np.zeros(shape=(width, height))
+    for a in range(0, width):
+        for b in range(0, height):
+            if greenMask[a, b] > 0:
+                net[a, b] = 2 # tag 2 is for start
+            elif redMask[a, b] > 0:
+                net[a, b] = 5 # tag 5 is for end of the maze
+            elif img15[a, b][0] > 20:
+                net[a, b] = 0 # tag 0 is for path
+            else:
+                net[a, b] = 1 # tag 1 is for wall
 
     return net
 
 def printNet(net):
-    for i in range(0, 15):
-        for j in range(0, 15):
+    for i in range(0, net.shape[0]):
+        for j in range(0, net.shape[1]):
             print (net[i, j] + " ")
         print("\n")
 
@@ -45,7 +55,7 @@ def main():
     if(img is None):
         return
     
-    net = buildnet(img)
+    net = buildnet(img, show = True)
     print(net)
     
     cv2.waitKey(0)
