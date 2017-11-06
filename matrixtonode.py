@@ -64,52 +64,56 @@ def solvethemaze(nodm):
         return
     current = nodm[len(nodm) - 1]  # take last node
 
-    if (current.east.tag == 5):
-        nodm.append(current.east)
-        return(nodm)
 
-    elif(not(current.east.tag == 5) and (current.east.beenhere == False)):
-        current.beenhere = True
-        nodm.append(current.east)
-        solvethemaze(nodm)
+    if not(current.east.tag==None):
+          if (current.east.tag == 5):
+             nodm.append(current.east)
+             return(nodm)
 
-    if (current.west.tag == 5):
-        nodm.append(current.west)
-        return(nodm)
+          elif (not(current.east.tag == 5) and (current.east.beenhere == False)):
+             current.beenhere = True
+             nodm.append(current.east)
+             solvethemaze(nodm)
 
-    elif(not(current.west.tag == 5) and (current.west.beenhere == False)):
-        current.beenhere = True
-        nodm.append(current.west)
-        solvethemaze(nodm)
+    if not(current.west.tag==None):
+          if (current.west.tag == 5):
+              nodm.append(current.west)
+              return(nodm)
 
-    if (current.north.tag == 5):
-        nodm.append(current.north)
-        return(nodm)
+          elif(not(current.west.tag == 5) and (current.west.beenhere == False)):
+             current.beenhere = True
+             nodm.append(current.west)
+             solvethemaze(nodm)
 
-    elif(not(current.north.tag == 5) and (current.north.beenhere == False)):
-        current.beenhere = True
-        nodm.append(current.north)
-        solvethemaze(nodm)
+    if not(current.north.tag==None):
+         if (current.north.tag == 5):
+             nodm.append(current.north)
+             return(nodm)
 
-    if (current.south.tag == 5):
-        nodm.append(current.south)
-        return(nodm)
+         elif(not(current.north.tag == 5) and (current.north.beenhere == False)):
+            current.beenhere = True
+            nodm.append(current.north)
+            solvethemaze(nodm)
+    if not(current.south.tag==None):
+        if (current.south.tag == 5):
+            nodm.append(current.south)
+            return(nodm)
 
-    elif(not(current.south.tag == 5) and not(current.south.beenhere == False)):
-        current.beenhere = True
-        nodm.append(current.south)
-        solvethemaze(nodm)
+        elif(not(current.south.tag == 5) and (current.south.beenhere == False)):
+            current.beenhere = True
+            nodm.append(current.south)
+            solvethemaze(nodm)
 
 def main():
     img = readImage("lavirinttesst.jpg")
     if(img is None):
         return
-    
+
     nodelist = []
     initstack = []
-    
+
     net = buildnet(img)
-    
+
     for k in range(0, 14):  # should be changed to 0..14 and the 15 line is used as an edge
         for f in range(0, 14):
             if not(net[k, f] == 1):
@@ -126,23 +130,22 @@ def main():
                         x = node(k, f, 2)
                     else:
                         x = node(k, f, 1)  # add tag giving into init
-    
+
                     # print(k)
                     # print(f)
                     # print()
                     net[k, f] = 4  # tag 4 represents that this field contains the node
                     nodelist.append(x)
-    
-    
+
+
     for j in range(0, len(nodelist)):  # go through all nodes you found and connect them
             nodelist[j].connect(net, nodelist)
             if nodelist[j].tag == 2:
                 initstack.append(nodelist[j])
                 print("have beginning of the list")
-    
+
     path = solvethemaze(initstack)
     print(path)
 
 if __name__ == "__main__":
     main()
-
