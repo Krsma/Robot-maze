@@ -1,5 +1,10 @@
 from netmaker import buildnet, readImage
 
+
+#import pycamera
+#camera = picamera.PiCamera()
+#camera.capture('javirinttesst.jpg')
+
 class node(object):
     north = None
     south = None
