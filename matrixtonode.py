@@ -65,7 +65,7 @@ def solvethemaze(nodm):
     current = nodm[len(nodm) - 1]  # take last node
 
 
-    if not(current.east.tag==None):
+    if not(current.east==None):
           if (current.east.tag == 5):
              nodm.append(current.east)
              return(nodm)
@@ -75,7 +75,7 @@ def solvethemaze(nodm):
              nodm.append(current.east)
              solvethemaze(nodm)
 
-    if not(current.west.tag==None):
+    if not(current.west==None):
           if (current.west.tag == 5):
               nodm.append(current.west)
               return(nodm)
@@ -85,7 +85,7 @@ def solvethemaze(nodm):
              nodm.append(current.west)
              solvethemaze(nodm)
 
-    if not(current.north.tag==None):
+    if not(current.north==None):
          if (current.north.tag == 5):
              nodm.append(current.north)
              return(nodm)
@@ -94,7 +94,7 @@ def solvethemaze(nodm):
             current.beenhere = True
             nodm.append(current.north)
             solvethemaze(nodm)
-    if not(current.south.tag==None):
+    if not(current.south==None):
         if (current.south.tag == 5):
             nodm.append(current.south)
             return(nodm)
