@@ -1,7 +1,7 @@
 from netmaker import buildnet, readImage
 
 
-#import pycamera
+import picamera
 #camera = picamera.PiCamera()
 #camera.capture('javirinttesst.jpg')
 
