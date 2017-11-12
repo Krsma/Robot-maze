@@ -1,5 +1,13 @@
 import cv2
 import numpy as np
+from enum import Enum
+
+class Tag(Enum):
+    PATH = 0
+    WALL = 1
+    START = 2
+    HAS_NODE = 4
+    FINAL = 5
 
 def readImage(imageFileName):
     img = cv2.imread(imageFileName)
@@ -30,17 +38,17 @@ def buildnet(img, width = 15, height = 15, show = False):
         cv2.imshow('redMask', redMask)
 
     # Build net
-    net = np.zeros(shape=(width, height))
+    net = np.zeros(shape=(width, height), dtype=Tag)
     for a in range(0, width):
         for b in range(0, height):
             if greenMask[a, b] > 0:
-                net[a, b] = 2 # tag 2 is for start
+                net[a, b] = Tag.START # tag 2 is for start
             elif redMask[a, b] > 0:
-                net[a, b] = 5 # tag 5 is for end of the maze
+                net[a, b] = Tag.FINAL # tag 5 is for end of the maze
             elif img15[a, b][0] > 20:
-                net[a, b] = 0 # tag 0 is for path
+                net[a, b] = Tag.PATH # tag 0 is for path
             else:
-                net[a, b] = 1 # tag 1 is for wall
+                net[a, b] = Tag.WALL # tag 1 is for wall
 
     return net
 
