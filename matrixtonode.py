@@ -62,48 +62,52 @@ def solvethemaze(nodm):
     if len(nodm) == 0:
         print("List is empty")
         return
-    current = nodm[len(nodm) - 1]  # take last node
+    current = nodm[- 1]  # take last node
 
 
     if not(current.east == None):
         if (current.east.tag == Tag.FINAL):
+            print("found the end")
             nodm.append(current.east)
             return(nodm)
 
         elif (not(current.east.tag == Tag.FINAL) and (current.east.beenhere == False)):
             current.beenhere = True
             nodm.append(current.east)
-            solvethemaze(nodm)
+            return(solvethemaze(nodm))
 
     if not(current.west == None):
         if (current.west.tag == Tag.FINAL):
+            print("found the end")
             nodm.append(current.west)
             return(nodm)
-        
+
         elif (not(current.west.tag == Tag.FINAL) and (current.west.beenhere == False)):
             current.beenhere = True
             nodm.append(current.west)
-            solvethemaze(nodm)
+            return(solvethemaze(nodm))
 
     if not(current.north == None):
         if (current.north.tag == Tag.FINAL):
             nodm.append(current.north)
+            print("found the end")
             return(nodm)
 
         elif(not(current.north.tag == Tag.FINAL) and (current.north.beenhere == False)):
             current.beenhere = True
             nodm.append(current.north)
-            solvethemaze(nodm)
-    
+            return(solvethemaze(nodm))
+
     if not(current.south == None):
         if (current.south.tag == Tag.FINAL):
             nodm.append(current.south)
+            print("found the end")
             return(nodm)
 
         elif(not(current.south.tag == Tag.FINAL) and (current.south.beenhere == False)):
             current.beenhere = True
             nodm.append(current.south)
-            solvethemaze(nodm)
+            return(solvethemaze(nodm))
 
 def main():
     img = readImage("lavirinttesst.jpg")
@@ -140,7 +144,7 @@ def main():
             nodelist[j].connect(net, nodelist)
             if nodelist[j].tag == Tag.START:
                 initstack.append(nodelist[j])
-                print("have beginning of the list")
+                 #print("have beginning of the list")
 
     path = solvethemaze(initstack)
     print(path)
