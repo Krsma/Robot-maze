@@ -58,56 +58,56 @@ class Node(object):
             elif net[j, self.positiony] == Tag.WALL:
                 break
 
-def solvethemaze(nodm):
-    if len(nodm) == 0:
+def solvethemaze(path):
+    if len(path) == 0:
         print("List is empty")
         return
-    current = nodm[- 1]  # take last node
+    current = path[- 1]  # take last node
 
 
     if not(current.east == None):
         if (current.east.tag == Tag.FINAL):
             print("found the end")
-            nodm.append(current.east)
-            return(nodm)
+            path.append(current.east)
+            return(path)
 
-        elif (not(current.east.tag == Tag.FINAL) and (current.east.beenhere == False)):
+        elif ((current.east.tag == Tag.PATH) and (current.east.beenhere == False)):
             current.beenhere = True
-            nodm.append(current.east)
-            return(solvethemaze(nodm))
+            path.append(current.east)
+            return(solvethemaze(path))
 
     if not(current.west == None):
         if (current.west.tag == Tag.FINAL):
             print("found the end")
-            nodm.append(current.west)
-            return(nodm)
+            path.append(current.west)
+            return(path)
 
-        elif (not(current.west.tag == Tag.FINAL) and (current.west.beenhere == False)):
+        elif ((current.west.tag == Tag.PATH) and (current.west.beenhere == False)):
             current.beenhere = True
-            nodm.append(current.west)
-            return(solvethemaze(nodm))
+            path.append(current.west)
+            return(solvethemaze(path))
 
     if not(current.north == None):
         if (current.north.tag == Tag.FINAL):
-            nodm.append(current.north)
+            path.append(current.north)
             print("found the end")
-            return(nodm)
+            return(path)
 
-        elif(not(current.north.tag == Tag.FINAL) and (current.north.beenhere == False)):
+        elif((current.north.tag == Tag.PATH) and (current.north.beenhere == False)):
             current.beenhere = True
-            nodm.append(current.north)
-            return(solvethemaze(nodm))
+            path.append(current.north)
+            return(solvethemaze(path))
 
     if not(current.south == None):
         if (current.south.tag == Tag.FINAL):
-            nodm.append(current.south)
+            path.append(current.south)
             print("found the end")
-            return(nodm)
+            return(path)
 
-        elif(not(current.south.tag == Tag.FINAL) and (current.south.beenhere == False)):
+        elif((current.south.tag == Tag.PATH) and (current.south.beenhere == False)):
             current.beenhere = True
-            nodm.append(current.south)
-            return(solvethemaze(nodm))
+            path.append(current.south)
+            return(solvethemaze(path))
 
 def main():
     img = readImage("lavirinttesst.jpg")
@@ -115,7 +115,7 @@ def main():
         return
 
     nodelist = []
-    initstack = []
+    path = []
 
     net = buildnet(img)
 
@@ -143,10 +143,10 @@ def main():
     for j in range(0, len(nodelist)):  # go through all nodes you found and connect them
             nodelist[j].connect(net, nodelist)
             if nodelist[j].tag == Tag.START:
-                initstack.append(nodelist[j])
+                path.append(nodelist[j])
                  #print("have beginning of the list")
 
-    path = solvethemaze(initstack)
+    path = solvethemaze(path)
     print(path)
 
 if __name__ == "__main__":
