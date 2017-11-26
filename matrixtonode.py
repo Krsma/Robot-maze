@@ -64,7 +64,7 @@ def solvethemaze(path):
         return
     current = path[- 1]  # take last node
 
-    if current.tag == 5:
+    if current.tag == Tag.FINAL:
         return (path)
 
     if not (current.east == None):
@@ -130,9 +130,10 @@ def main():
                 elif net[k, f] == Tag.START:
                       x = Node(k, f, Tag.START)
                 else:
-                      x = Node(k, f, Tag.WALL)  # add tag giving into init
+                      x = Node(k, f, Tag.PATH)  # add tag giving into init
 
                 net[k, f] = Tag.HAS_NODE
+                print (x)
                 nodelist.append(x)
 
     for j in range(0, len(nodelist)):  # go through all nodes you found and connect them
