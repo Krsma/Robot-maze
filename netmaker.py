@@ -6,7 +6,6 @@ class Tag(Enum):
     PATH = 0
     WALL = 1
     START = 2
-    HAS_NODE = 4
     FINAL = 5
 
 def readImage(imageFileName):

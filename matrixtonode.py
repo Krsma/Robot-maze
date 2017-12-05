@@ -16,47 +16,21 @@ class Node(object):
         self.positionx = positionx
         self.tag = tag
 
-    def connect(self, net, nodelist):  # making connections to other nodes, there probably is a better way to do this
-        for i in range(self.positiony, 15):
-            if net[self.positionx, i] == Tag.HAS_NODE:
-                for j in range(0, len(nodelist)):
-                    if (nodelist[j].positiony == i) and (nodelist[j].positionx == self.positionx):
-                        self.east = nodelist[j]
-                        break
+    def __str__(self):
+        return str(self.tag)
+    
+    def __repr__(self):
+        return str(self.tag)
 
-            elif net[self.positionx, i] == Tag.WALL:
-                break
+    def connect(self, nodelist):  # making connections to other nodes, there probably is a better way to do this
 
-        for i in range(1, self.positiony):  # edge is always 1 so we skip that one
-            if net[self.positionx, i] == Tag.HAS_NODE:
-                for j in range(0, len(nodelist)):
-                    if (nodelist[j].positiony == i) and (nodelist[j].positionx == self.positionx):
-                        self.west = nodelist[j]
-                        break
-
-            elif net[self.positionx, i] == Tag.WALL:
-                break
-
-        for j in range(self.positionx, 15):
-            if net[j, self.positiony] == Tag.HAS_NODE:
-                for j in range(0, len(nodelist)):
-                    if (nodelist[j].positionx == i) and (nodelist[j].positiony == self.positiony):
-                        self.south = nodelist[j]
-                        break
-
-            elif net[j, self.positiony] == Tag.WALL:
-                break
-
-        for j in range(1, self.positionx):  # evading the edge
-            if net[j, self.positiony] == Tag.HAS_NODE:
-                for j in range(0, len(nodelist)):
-                    if (nodelist[j].positionx == i) and (nodelist[j].positiony == self.positiony):
-                        self.north = nodelist[j]
-                        break
-
-            elif net[j, self.positiony] == Tag.WALL:
-                break
-
+        x = self.positionx
+        y = self.positiony
+        
+        self.north = find_node(nodelist, x - 1, y)
+        self.south = find_node(nodelist, x + 1, y)
+        self.west = find_node(nodelist, x, y - 1)
+        self.east = find_node(nodelist, x, y + 1)
 
 def solvethemaze(path):
     if len(path) == 0:
@@ -111,40 +85,46 @@ def solvethemaze(path):
             path.append(current.south)
             return (solvethemaze(path))
 
+def find_node(nodelist, x, y):
+    for n in nodelist:
+        if n.positionx == x and n.positiony == y:
+            return n
+
+def create_nodelist(net):
+    nodelist = []
+    for k in range(0, 14):  # should be changed to 0..14 and the 15 line is used as an edge
+        for f in range(0, 14):
+            if not (net[k, f] == Tag.WALL):
+                if net[k, f] == Tag.FINAL:
+                    x = Node(k, f, Tag.FINAL)
+                elif net[k, f] == Tag.START:
+                    x = Node(k, f, Tag.START)
+                else:
+                    x = Node(k, f, Tag.PATH)  # add tag giving into init
+
+                nodelist.append(x)
+    return nodelist
+
+def connect_all(path, nodelist):
+    for j in range(0, len(nodelist)):  # go through all nodes you found and connect them
+        nodelist[j].connect(nodelist)
+        if nodelist[j].tag == Tag.START:
+            path.append(nodelist[j])
 
 def main():
     img = readImage("lavirinttesst.jpg")
     if (img is None):
         return
 
-    nodelist = []
     path = []
 
     net = buildnet(img)
-
-    for k in range(0, 14):  # should be changed to 0..14 and the 15 line is used as an edge
-        for f in range(0, 14):
-            if not (net[k, f] == Tag.WALL):
-                if net[k, f] == Tag.FINAL:
-                      x = Node(k, f, Tag.FINAL)
-                elif net[k, f] == Tag.START:
-                      x = Node(k, f, Tag.START)
-                else:
-                      x = Node(k, f, Tag.PATH)  # add tag giving into init
-
-                net[k, f] = Tag.HAS_NODE
-                print (x)
-                nodelist.append(x)
-
-    for j in range(0, len(nodelist)):  # go through all nodes you found and connect them
-        nodelist[j].connect(net, nodelist)
-        if nodelist[j].tag == Tag.START:
-            path.append(nodelist[j])
-            # print("have beginning of the list")
-
-    path = solvethemaze(path)
+    nodelist = create_nodelist(net)
+    connect_all(path, nodelist)
     print(path)
 
+    solution = solvethemaze(path)
+    print(solution)
 
 if __name__ == "__main__":
     main()
