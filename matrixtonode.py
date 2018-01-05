@@ -1,5 +1,5 @@
 from netmaker import buildnet, readImage, Tag
-
+from valuechecker import check_connect_all,check_buildnet,check_img,checklist
 
 class Node(object):
     north = None
@@ -113,17 +113,29 @@ def connect_all(path, nodelist):
 
 def main():
     img = readImage("lavirinttesst.jpg")
-    if (img is None):
+    if check_img(img) == False:
         return
+
 
     path = []
 
     net = buildnet(img)
+    if check_buildnet(net) == False:
+        return
+
     nodelist = create_nodelist(net)
+    if checklist(nodelist) == False:
+        return
+
     connect_all(path, nodelist)
+    if check_connect_all(nodelist) == False:
+        return
+
     print(path)
 
     solution = solvethemaze(path)
+    if checklist(solution) == False:
+        return
     print(solution)
 
 if __name__ == "__main__":
