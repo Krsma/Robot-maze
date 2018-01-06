@@ -40,29 +40,29 @@ def find_node(nodelist, x, y):
 
 def checklist(a):  #function for checking if received list isnt empty
     if a is None:
-        return False
+        return "not a list"
     if not a: # pythonic way of checking if list is empty using implied boolean value of an empty list
-        return False
+        return "list is empty"
     return True
 
 def check_connect_all(a):   #function for checking if all nodes in given list have at least 1 connection
     for i in a:
         if not ((i.north != None) or (i.south != None) or (i.west != None) or (i.east != None)):
-            return False
+            return "there are nodes with no connections"
     return True
 
 def check_img(img):
     if img is None: # check if img read failed
-        return False
+        return "image failed to load"
     return True
 
 def check_buildnet(net):
     if not net.size == 225: #net.size should return 225 (15*15) if every element of the net contains a value
-        return False
+        return "net isn't completly filled"
     for i in range(0, net.shape[0]): #checking if any element of net is invalid (in sense that it isnt one of the defined values)
         for j in range(0, net.shape[1]):
             if not ((net[i, j] == Tag.START) or (net[i, j] == Tag.PATH) or (net[i, j] == Tag.WALL) or (net[i, j] == Tag.FINAL)):
-                return False
+                return "invalid data in the net"
     return True
 
 
