@@ -38,12 +38,34 @@ def find_node(nodelist, x, y):
             return n
 
 
-def checklist(a):  #function for checking if received list isnt empty
+def checklist(a):  # function for checking if received list isnt empty
     if a is None:
         return "not a list"
     if not a: # pythonic way of checking if list is empty using implied boolean value of an empty list
         return "list is empty"
     return True
+
+def check_path(a): # checking if found path is valid
+    if not a:
+        return "list is empty"
+    found_start = False
+    found_end = False
+    for i in a:
+        if a.tag == Tag.START:
+            found_start = True
+        if a.tag == Tag.FINAL:
+            found_end = True
+
+    if found_start == False:
+        if found_end == False:
+            return "no end and no start"
+        else:
+            return "no start found"
+    if found_end == False:
+        return "no end found"
+
+    return  True
+
 
 def check_connect_all(a):   #function for checking if all nodes in given list have at least 1 connection
     for i in a:

@@ -1,5 +1,5 @@
 from netmaker import buildnet, readImage, Tag
-from valuechecker import check_connect_all,check_buildnet,check_img,checklist
+from valuechecker import check_connect_all,check_buildnet,check_img,checklist,check_path
 
 imgname = "lavirinttesst.jpg"
 
@@ -143,7 +143,7 @@ def main():
     print(path)
 
     solution = solvethemaze(path)
-    checker = checklist(solution)
+    checker = check_path(solution)
     if isinstance(checker, str):
         print(checker)
         return
