@@ -1,5 +1,7 @@
 from netmaker import buildnet, readImage, Tag
+from valuechecker import check_connect_all,check_buildnet,check_img,checklist,check_path
 
+imgname = "lavirinttesst.jpg"
 
 class Node(object):
     north = None
@@ -112,18 +114,39 @@ def connect_all(path, nodelist):
             path.append(nodelist[j])
 
 def main():
-    img = readImage("lavirinttesst.jpg")
-    if (img is None):
+    img = readImage(imgname)
+    if check_img(img) == False:
         return
+
 
     path = []
 
     net = buildnet(img)
+
+    checker = check_buildnet(net)
+    if isinstance(checker, str):  # check if output of check function is a string, if it is it means there was an error
+        print(checker)
+        return
+
     nodelist = create_nodelist(net)
+    checker = checklist(nodelist)
+    if isinstance(checker, str):
+        print(checker)
+        return
+
     connect_all(path, nodelist)
+    checker = check_connect_all(nodelist)
+    if isinstance(checker, str):
+        print(checker)
+        return
+
     print(path)
 
     solution = solvethemaze(path)
+    checker = check_path(solution)
+    if isinstance(checker, str):
+        print(checker)
+        return
     print(solution)
 
 if __name__ == "__main__":
