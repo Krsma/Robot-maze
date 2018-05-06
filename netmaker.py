@@ -2,20 +2,23 @@ import cv2
 import numpy as np
 from enum import Enum
 
+startpos = []
 class Tag(Enum):
     PATH = 0
     WALL = 1
     START = 2
     FINAL = 5
+    VISITED = 3
 
 def readImage(imageFileName):
     img = cv2.imread(imageFileName)
-    if img is None :
+    if img is None:
         print("File " + imageFileName + " not found.")
     return img 
 
 def buildnet(img, width = 15, height = 15, show = False):
     # tag 2 is for start
+    # tag 3 is later used for visited cells
     # tag 5 is for end of the maze
     # tag 1 is for wall
     # tag 0 is for path
@@ -42,14 +45,20 @@ def buildnet(img, width = 15, height = 15, show = False):
         for b in range(0, height):
             if greenMask[a, b] > 0:
                 net[a, b] = Tag.START # tag 2 is for start
+                startpos.append(a)
+                startpos.append(b)
             elif redMask[a, b] > 0:
-                net[a, b] = Tag.FINAL # tag 5 is for end of the maze
+                net[a, b] = Tag.FINAL  # tag 5 is for end of the maze
             elif img15[a, b][0] > 20:
-                net[a, b] = Tag.PATH # tag 0 is for path
+                net[a, b] = Tag.PATH  # tag 0 is for path
             else:
-                net[a, b] = Tag.WALL # tag 1 is for wall
+                net[a, b] = Tag.WALL  # tag 1 is for wall
 
     return net
+def findstart():
+    start = tuple(startpos)  # conversion of list into a tuple
+    print("found start")
+    return start
 
 def printNet(net):
     for i in range(0, net.shape[0]):
