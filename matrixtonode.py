@@ -5,6 +5,7 @@ imgname = "lavirinttesst.jpg"
 path = []
 
 def solvemaze(x,y,net):
+    global path
     if net[x,y] == Tag.FINAL:
         position = (x, y)
         path.append(position)  # saving the coordinates in a tuple
@@ -36,8 +37,10 @@ def main():
     net = buildnet(img)
 
     start = findstart()
-    solvemaze(start[0],start[1],net)
+    solvemaze(start[0], start[1], net)
 
+    for x in path:
+        print(x[0], x[1])
 
 
 
