@@ -31,7 +31,7 @@ def main():
     if check_img(img) == False:
         return
 
-
+    global path
     path = []
 
     net = buildnet(img)
