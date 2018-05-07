@@ -38,7 +38,7 @@ def main():
 
     start = findstart()
     solvemaze(start[0], start[1], net)
-
+    path.reverse()  # reversing the string so that it starts from the start towards the end
     for x in path:
         print(x[0], x[1])
 
