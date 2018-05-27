@@ -1,6 +1,6 @@
 from netmaker import buildnet, findstart, readImage, Tag
 from valuechecker import check_buildnet,check_img
-
+from movementhandler import writepath
 imgname = "lavirinttesst.jpg"
 path = []
 
@@ -42,6 +42,7 @@ def main():
     for x in path:
         print(x[0], x[1])
 
+    writepath(path,img)
 
 
 if __name__ == "__main__":
