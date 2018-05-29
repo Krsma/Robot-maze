@@ -1,6 +1,9 @@
 import cv2
 import numpy as np
 from enum import Enum
+import os
+from time import sleep
+import picamera
 
 startpos = []
 class Tag(Enum):
@@ -9,6 +12,18 @@ class Tag(Enum):
     START = 2
     FINAL = 5
     VISITED = 3
+
+def getImage(imageFileName):
+    if (os.name()[0] == 'raspberrypi'): #check if code is being run on a Raspberry pi, so that we can use the camera
+        camera = PiCamera()
+        camera.resolution = (150, 150)
+        camera.start_preview()
+        sleep(2)
+        camera.capture('cameraoutput.jpg')
+        return readImage('cameraoutput.jpg')
+    else:
+        return readImage(imageFileName)
+
 
 def readImage(imageFileName):
     img = cv2.imread(imageFileName)
