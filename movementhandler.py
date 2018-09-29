@@ -30,9 +30,6 @@ def writepath(path,image):
 
 # if you can avoid the code bellow this point please do
 # The code written there is an abomination, not even the Devil himself wouldn't force somebody to read it
-# It is a steaming pile of shit, which works god knows why. Its filled with mixed up variables name and plenty other war crimes
-# Please seek help if somebody forces you to read that code
-# https://www.iasp.info/
 # If the code stops working for some reason, sacrifice a goat to the Cthulhu and ask for help
 
 

@@ -1,4 +1,4 @@
-from netmaker import buildnet, findstart, readImage, Tag
+from image_analyzer import buildnet, findstart, readImage, Tag
 from valuechecker import check_buildnet,check_img
 from movementhandler import writepath
 imgname = "lavirinttesst.jpg"
