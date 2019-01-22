@@ -1,5 +1,5 @@
 from image_analyzer import buildnet, findstart, readImage, Tag
-from valuechecker import check_buildnet,check_img
+#from valuechecker import check_buildnet,check_img
 from movementhandler import writepath
 imgname = "lavirinttesst.jpg"
 path = []
@@ -28,8 +28,8 @@ def solvemaze(x,y,net):
 
 def main():
     img = readImage(imgname)
-    if check_img(img) == False:
-        return
+    #if check_img(img) == False:
+    #    return
 
     global path
     path = []
